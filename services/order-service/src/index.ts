@@ -84,7 +84,7 @@ app.post('/api/orders', async (req, res) => {
     }
     
     res.status(201).json({
-      message: 'Order created successfullya',
+      message: 'Order created successfully',
       order: { ...order, items },
     });
   } catch (error) {
