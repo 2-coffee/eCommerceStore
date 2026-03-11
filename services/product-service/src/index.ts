@@ -80,11 +80,11 @@ app.get('/api/products/:id', async (req, res) => {
 // Create product
 app.post('/api/products', async (req, res) => {
   try {
-    const { name, description, price, stock_quantity } = req.body;
+    const { name, description, price, stock } = req.body;
     
     const result = await pool.query(
       'INSERT INTO products (name, description, price, stock_quantity) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, description, price, stock_quantity]
+      [name, description, price, stock]
     );
     
     res.status(201).json(result.rows[0]);
