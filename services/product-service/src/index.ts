@@ -33,15 +33,15 @@ async function initializeDatabase() {
       );
     `);
     
-    // Seed sample data
-    await pool.query(`
-      INSERT INTO products (name, description, price, stock_quantity) 
-      VALUES 
-        ('Laptop', 'High performance laptop', 999.99, 50),
-        ('Mouse', 'Wireless mouse', 29.99, 200),
-        ('Keyboard', 'Mechanical keyboard', 79.99, 150)
-      ON CONFLICT DO NOTHING;
-    `);
+    // // Seed sample data
+    // await pool.query(`
+    //   INSERT INTO products (name, description, price, stock_quantity) 
+    //   VALUES 
+    //     ('Laptop', 'High performance laptop', 999.99, 50),
+    //     ('Mouse', 'Wireless mouse', 29.99, 200),
+    //     ('Keyboard', 'Mechanical keyboard', 79.99, 150)
+    //   ON CONFLICT DO NOTHING;
+    // `);
     
     console.log('Products table initialized');
   } catch (error) {

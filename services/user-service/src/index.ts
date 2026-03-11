@@ -22,21 +22,33 @@ const pool = new Pool({
 app.use(cors());
 app.use(express.json());
 
-// Initialize database tables
+// Initialize database tables with retry logic
 async function initializeDatabase() {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        name VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-    console.log('Users table initialized');
-  } catch (error) {
-    console.error('Database initialization error:', error);
+  const maxRetries = 30;
+  let retries = 0;
+
+  while (retries < maxRetries) {
+    try {
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY,
+          email VARCHAR(255) UNIQUE NOT NULL,
+          password VARCHAR(255) NOT NULL,
+          name VARCHAR(255) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+      console.log('Users table initialized');
+      return; // Success, exit the retry loop
+    } catch (error) {
+      retries++;
+      if (retries >= maxRetries) {
+        console.error('Database initialization failed after max retries:', error);
+        throw error;
+      }
+      console.log(`Database connection failed, retrying... (${retries}/${maxRetries})`);
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
+    }
   }
 }
 

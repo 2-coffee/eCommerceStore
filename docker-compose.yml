@@ -116,6 +116,16 @@ services:
     networks:
       - ecommerce-network
 
+  frontend:
+    image: nginx:alpine
+    container_name: frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    networks:
+      - ecommerce-network
+
 volumes:
   postgres_data:
 
